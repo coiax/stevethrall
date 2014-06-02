@@ -31,18 +31,21 @@ var bot = mineflayer.createBot({
 bot.on("spawn", function() {
     bot.chat("Hello world!");
     // Search for a tree in a 16x16x16 box.
-    for (int i=-8; i < 8; i++) {
-        for (int j=-8; j < 8; j++) {
-            for (int k=-8; k < 8; k++) {
-                var pos = entity.position.clone();
+    for (var i=-8; i < 8; i++) {
+        for (var j=-8; j < 8; j++) {
+            for (var k=-8; k < 8; k++) {
+                var pos = bot.entity.position.clone();
                 pos.translate(i,j,k).floor();
 
                 var block = bot.blockAt(pos);
+                if (block != null && block.type == 17) {
+                    console.log("Log at " + pos.toString());
+                }
     }}}
 });
 
 bot.on("entityMoved", function(entity) {
-    if (entity.type == "player") {
+    if (entity != bot.entity && entity.type == "player") {
 
         var pos = entity.position.clone();
         // Look at the player's head, not their feet.
