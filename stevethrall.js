@@ -68,6 +68,7 @@ function tree_search(logs) {
     // list of "trees", where a tree is a horizontally and/or diagonally
     // contigious set of log blocks. A tree cannot be a subset of another
     // tree, that's just one big tree.
+    console.log("Searching for trees.");
     var trees = [];
     logs.forEach(function(block, index, arr) {
         already_in = false;
@@ -78,16 +79,29 @@ function tree_search(logs) {
             }
         }
         if (!already_in) {
-            var tree = {};
+            var done = [];
 
-            var todo = {};
-            todo[block] = true;
+            var todo = [];
+            todo.push(block);
 
-            while (
+            while (todo.length != 0) {
+                var target_block = todo.pop();
 
+                var neighbours = moore(target_block.position);
+                neighbours.forEach(function(point, index, arr) {
+                    var block = bot.blockAt(point);
+                    if (block != null && block.type == 17) {
+                        todo.push(block);
+                    }
+                });
+
+                done.push(target_block);
+            }
+
+            trees.push(done);
         }
     });
-
+    console.log("DONE");
 }
 
 bot.on("spawn", function() {
@@ -103,10 +117,11 @@ bot.on("spawn", function() {
 
                 var block = bot.blockAt(pos);
                 if (block != null && block.type == 17) {
-                    console.log("Log at " + pos.toString());
                     logs.push(block);
                 }
     }}}
+
+    tree_search(logs);
 });
 
 bot.on("entityMoved", function(entity) {
