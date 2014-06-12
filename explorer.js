@@ -9,7 +9,8 @@ var generate_name = require('./lib/name')
 var name = generate_name();
 var bot = mineflayer.createBot({
     username: name,
-    host: '192.9.206.136',
+    host: process.argv[2],
+    port: process.argv[3]
 });
 
 navigatePlugin(bot);
